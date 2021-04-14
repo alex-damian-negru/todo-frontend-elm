@@ -1,20 +1,37 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, text, div, h1, img)
+import Html exposing (Html, div, img, text)
 import Html.Attributes exposing (src)
+
 
 
 ---- MODEL ----
 
 
-type alias Model =
-    {}
+type alias Task =
+    { id : Int
+    , title : String
+    , completed : Bool
+    , order : Int
+    , url : String
+    }
 
 
-init : ( Model, Cmd Msg )
+init : ( Task, Cmd Msg )
 init =
-    ( {}, Cmd.none )
+    ( Task 42 "title" True 42 "url"
+    , Cmd.none
+    )
+
+
+stringFromBool : Bool -> String
+stringFromBool value =
+    if value then
+        "true"
+
+    else
+        "false"
 
 
 
@@ -25,20 +42,24 @@ type Msg
     = NoOp
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    ( model, Cmd.none )
+update : Msg -> Task -> ( Task, Cmd Msg )
+update msg task =
+    ( task, Cmd.none )
 
 
 
 ---- VIEW ----
 
 
-view : Model -> Html Msg
-view model =
+view : Task -> Html Msg
+view task =
     div []
         [ img [ src "/logo.svg" ] []
-        , h1 [] [ text "Your Elm App is working!" ]
+        , div [] [ text ("id: " ++ String.fromInt task.id) ]
+        , div [] [ text ("title: " ++ task.title) ]
+        , div [] [ text ("completed: " ++ stringFromBool task.completed) ]
+        , div [] [ text ("order: " ++ String.fromInt task.order) ]
+        , div [] [ text ("url: " ++ task.url) ]
         ]
 
 
@@ -46,7 +67,7 @@ view model =
 ---- PROGRAM ----
 
 
-main : Program () Model Msg
+main : Program () Task Msg
 main =
     Browser.element
         { view = view
