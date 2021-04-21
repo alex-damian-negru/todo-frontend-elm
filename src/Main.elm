@@ -9,7 +9,7 @@ import Html.Attributes exposing (src)
 ---- MODEL ----
 
 
-type alias Task =
+type alias Model =
     { id : Int
     , title : String
     , completed : Bool
@@ -18,20 +18,26 @@ type alias Task =
     }
 
 
-init : ( Task, Cmd Msg )
+init : ( Model, Cmd Msg )
 init =
-    ( Task 42 "title" True 42 "url"
+    ( Model 42 "title" True 42 "url"
     , Cmd.none
     )
 
 
-stringFromBool : Bool -> String
-stringFromBool value =
-    if value then
-        "true"
 
-    else
-        "false"
+---- VIEW ----
+
+
+view : Model -> Html Msg
+view task =
+    div []
+        [ img [ src "/logo.svg" ] []
+        , div [] [ text ("id: " ++ String.fromInt task.id) ]
+        , div [] [ text ("title: " ++ task.title) ]
+        , div [] [ text ("order: " ++ String.fromInt task.order) ]
+        , div [] [ text ("url: " ++ task.url) ]
+        ]
 
 
 
@@ -42,32 +48,16 @@ type Msg
     = NoOp
 
 
-update : Msg -> Task -> ( Task, Cmd Msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg task =
     ( task, Cmd.none )
-
-
-
----- VIEW ----
-
-
-view : Task -> Html Msg
-view task =
-    div []
-        [ img [ src "/logo.svg" ] []
-        , div [] [ text ("id: " ++ String.fromInt task.id) ]
-        , div [] [ text ("title: " ++ task.title) ]
-        , div [] [ text ("completed: " ++ stringFromBool task.completed) ]
-        , div [] [ text ("order: " ++ String.fromInt task.order) ]
-        , div [] [ text ("url: " ++ task.url) ]
-        ]
 
 
 
 ---- PROGRAM ----
 
 
-main : Program () Task Msg
+main : Program () Model Msg
 main =
     Browser.element
         { view = view
