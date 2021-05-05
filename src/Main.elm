@@ -30,13 +30,13 @@ init =
 
 
 view : Model -> Html Msg
-view task =
+view model =
     div []
         [ img [ src "/logo.svg" ] []
-        , div [] [ text ("id: " ++ String.fromInt task.id) ]
-        , div [] [ text ("title: " ++ task.title) ]
-        , div [] [ text ("order: " ++ String.fromInt task.order) ]
-        , div [] [ text ("url: " ++ task.url) ]
+        , div [] [ text ("id: " ++ String.fromInt model.id) ]
+        , div [] [ text ("title: " ++ model.title) ]
+        , div [] [ text ("order: " ++ String.fromInt model.order) ]
+        , div [] [ text ("url: " ++ model.url) ]
         ]
 
 
