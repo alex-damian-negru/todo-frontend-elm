@@ -13,14 +13,14 @@ import Todo exposing (Todo, view)
 
 type alias Model =
     { todos : List Todo
-    , newTodo : Maybe Todo
+    , todoInProgress : Maybe Todo
     }
 
 
 init : ( Model, Cmd Msg )
 init =
     ( { todos = Todo.initTodos
-      , newTodo = Nothing
+      , todoInProgress = Nothing
       }
     , Cmd.none
     )
@@ -34,7 +34,7 @@ view : Model -> Html Msg
 view model =
     let
         maybeNewTodoInput =
-            model.newTodo
+            model.todoInProgress
                 |> Maybe.map TodoInput.view
     in
     div []
@@ -78,7 +78,7 @@ update msg model =
     case msg of
         AddTodo ->
             ( { model
-                | newTodo = Just Todo.empty
+                | todoInProgress = Just Todo.empty
               }
             , Cmd.none
             )
@@ -99,22 +99,16 @@ update msg model =
 
 handleInputMsg : TodoInput.Msg -> Model -> ( Model, Cmd Msg )
 handleInputMsg todoInputMsg model =
-    case model.newTodo of
-        Just todo ->
+    case model.todoInProgress of
+        Just newTodo ->
             let
-                ( updatedTodo, newCmd ) =
-                    TodoInput.update todoInputMsg todo
-
-                updatedModel =
-                    case todoInputMsg of
-                        TodoInput.Save ->
-                            { model | todos = Todo.add updatedTodo model.todos, newTodo = Nothing }
-
-                        _ ->
-                            { model | newTodo = Just updatedTodo }
+                ( updatedNewTodo, newCmd ) =
+                    TodoInput.update todoInputMsg newTodo
             in
-            ( updatedModel, Cmd.map GotInputMsg newCmd )
+            ( { model | todoInProgress = Just updatedNewTodo }, Cmd.map GotInputMsg newCmd )
 
+        --TODO If the Input sent a Save message, append the ToDo in progress to the list of todos in the model and make ToDo in Progress to Nothing
+        --TODO If the Input sent anything else (SetTitle), take the udated ToDo and set it on the Model as the ToDo in progress
         Nothing ->
             ( model, Cmd.none )
 
